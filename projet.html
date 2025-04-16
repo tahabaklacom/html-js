@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Typing Speed Game</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .game-container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    #word {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin: 1rem 0;
+    }
+
+    #text {
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.2rem;
+    }
+
+    .info {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .info div {
+      font-size: 1.2rem;
+    }
+
+    #end-game-container {
+      display: none;
+      text-align: center;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background: #fff;
+      color: #0072ff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .btn:hover {
+      background: #e6e6e6;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container" id="game-container">
+    <h1>Typing Speed Game</h1>
+    <div id="word">Loading...</div>
+    <input type="text" id="text" placeholder="Type the word..." autofocus autocomplete="off"/>
+    <div class="info">
+      <div>Score: <span id="score">0</span></div>
+      <div>Time: <span id="time">10</span>s</div>
+    </div>
+  </div>
+
+  <div id="end-game-container" class="game-container">
+    <h1>Time's up!</h1>
+    <p>Your final score is <span id="final-score"></span></p>
+    <button class="btn" onclick="location.reload()">Play Again</button>
+  </div>
+
+  <script>
+    const words = [
+      "apple", "banana", "orange", "grape", "pineapple", "car", "train", "river", "mountain", "cloud",
+      "storm", "flower", "guitar", "school", "notebook", "pencil", "window", "planet", "mouse", "keyboard",
+      "street", "coffee", "butter", "mirror", "shadow", "forest", "ocean", "silver", "dragon", "castle"
+    ];
+
+    const wordEl = document.getElementById("word");
+    const text = document.getElementById("text");
+    const scoreEl = document.getElementById("score");
+    const timeEl = document.getElementById("time");
+    const endgameEl = document.getElementById("end-game-container");
+    const gameContainer = document.getElementById("game-container");
+
+    let currentWord;
+    let score = 0;
+    let time = 10;
+
+    text.focus();
+
+    const timeInterval = setInterval(updateTime, 1000);
+
+    function getRandomWord() {
+      return words[Math.floor(Math.random() * words.length)];
+    }
+
+    function addWordToDOM() {
+      currentWord = getRandomWord();
+      wordEl.innerHTML = currentWord;
+    }
+
+    function updateScore() {
+      score++;
+      scoreEl.innerHTML = score;
+    }
+
+    function updateTime() {
+      time--;
+      timeEl.innerHTML = time;
+      if (time === 0) {
+        clearInterval(timeInterval);
+        gameOver();
+      }
+    }
+
+    function gameOver() {
+      gameContainer.style.display = "none";
+      endgameEl.style.display = "block";
+      document.getElementById("final-score").innerText = score;
+    }
+
+    addWordToDOM();
+
+    text.addEventListener("input", () => {
+      if (text.value.toLowerCase() === currentWord.toLowerCase()) {
+        addWordToDOM();
+        updateScore();
+        text.value = "";
+        time += 2; 
+      }
+    });
+  </script>
+</body>
+</html>
